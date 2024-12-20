@@ -1,0 +1,25 @@
+Package: ompReadGA
+Title: Tools for Fast BAM File Processing and Conversion to GAlignments using Multiple Threads
+Version: 0.0.0.9000
+Authors@R: 
+    person("Byungjun", "Kim", , "byungjunkim07@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0009-0009-8477-7282"))
+Description: Provides tools to process BAM files efficiently using C++ framework
+    via the 'ompBAM' library. Includes functions to extract alignment data and 
+    convert it into GAlignments objects for downstream genomic analysis.
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
+    license
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports: 
+    Rcpp,
+    GenomicAlignments,
+    IRanges,
+    zlibbioc,
+    Biostrings, 
+    S4Vectors
+LinkingTo: 
+    ompBAM,
+    Rcpp,
+    zlibbioc
