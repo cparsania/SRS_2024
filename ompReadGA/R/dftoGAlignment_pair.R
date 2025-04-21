@@ -17,8 +17,12 @@
 #' @importFrom Biostrings DNAStringSet
 #' @export
 
-ompReadGAlignmentsPaired <- function(bam_file, n_threads_to_use = 1L) {
+ompReadGAPaired <- function(bam_file, n_threads_to_use = 1L, 
+                            fields_to_return = c("sequences", "quality_scores", "mapq", 
+                                                 "mate_seqnames", "mate_positions", 
+                                                 "read_id", "mate_mapq", "template_length")) {
   alignment_data <- extract_alignment_details_paired(bam_file, n_threads_to_use)
+  
   galignments <- GenomicAlignments::GAlignments(
     seqnames = S4Vectors::Rle(alignment_data$seqnames),
     pos = alignment_data$start,
@@ -27,16 +31,32 @@ ompReadGAlignmentsPaired <- function(bam_file, n_threads_to_use = 1L) {
     qwidth = nchar(alignment_data$sequences),
     seqinfo = NULL
   )
-
-  # Add mate information as metadata
-  mcols(galignments)$sequences <- Biostrings::DNAStringSet(alignment_data$sequences)
-  mcols(galignments)$quality_scores <- alignment_data$quality_scores
-  mcols(galignments)$mapq <- alignment_data$mapq
-  mcols(galignments)$mate_seqnames <- alignment_data$mate_seqnames
-  mcols(galignments)$mate_positions <- alignment_data$mate_positions
-  mcols(galignments)$read_id <- alignment_data$read_id
-  mcols(galignments)$mate_mapq <- alignment_data$mate_mapq
-  mcols(galignments)$template_length <- alignment_data$template_length
-
+  
+  # Add metadata based on requested fields
+  if ("sequences" %in% fields_to_return) {
+    mcols(galignments)$sequences <- Biostrings::DNAStringSet(alignment_data$sequences)
+  }
+  if ("quality_scores" %in% fields_to_return) {
+    mcols(galignments)$quality_scores <- alignment_data$quality_scores
+  }
+  if ("mapq" %in% fields_to_return) {
+    mcols(galignments)$mapq <- alignment_data$mapq
+  }
+  if ("mate_seqnames" %in% fields_to_return) {
+    mcols(galignments)$mate_seqnames <- alignment_data$mate_seqnames
+  }
+  if ("mate_positions" %in% fields_to_return) {
+    mcols(galignments)$mate_positions <- alignment_data$mate_positions
+  }
+  if ("read_id" %in% fields_to_return) {
+    mcols(galignments)$read_id <- alignment_data$read_id
+  }
+  if ("mate_mapq" %in% fields_to_return) {
+    mcols(galignments)$mate_mapq <- alignment_data$mate_mapq
+  }
+  if ("template_length" %in% fields_to_return) {
+    mcols(galignments)$template_length <- alignment_data$template_length
+  }
+  
   return(galignments)
 }
